@@ -1,4 +1,4 @@
-const problems = [{word:"5",read:"t",meanings:["5"]}]; //eruda.hide();
+//const problems = [{word:"5",read:"t",meanings:["5"]}]; eruda.hide();
 if (!localStorage.hasOwnProperty("answer")){
 　localStorage.answer = "{}";
 };
@@ -8,6 +8,9 @@ if (!localStorage.hasOwnProperty("answerCount")){
 if (!localStorage.hasOwnProperty("likes")){
 　localStorage.likes = "[]";
 };
+window.addEventListener("click",ev => {
+document.children[0].requestFullscreen();
+});
 const page = document.createElement("div");
 const startButton = document.createElement("div");
 const problemAmountBox = document.createElement("input");
@@ -180,7 +183,7 @@ likeToggle.addEventListener("click",ev => {
 　add(text);
 　add(box);
 });
-if (!getStorage("playData")){
+if (getStorage("playData")){
 　continueButton.id = "continueButton";
 　continueButton.innerText = "続きから";
 　continueButton.style.cssText = "font-size:250%;border-radius:35px;color:white;background-color:#0cc3ca;text-align:center;position:absolute;top:64%;left:50%;border:solid;transform:translate(-50%,-50%);width:40%;";
@@ -194,7 +197,7 @@ likeToggle.id = "likeToggle";
 likeToggle.ariaLevel = "off";
 likeToggle.innerText = "OFF";
 likeToggle.style.cssText = "align-content:center;border-radius:35px;font-size:60px;text-align:center;position:absolute;top:11%;left:20%;transform:translate(-50%,-50%);background-color:#ff9b00;border:solid;border-width:10px;width:30%;height:90px;color:white;";
-if (!getStorage("likes").length > 0){
+if (getStorage("likes").length > 0){
 　add(likeToggle);
 　add(text3);
 };
