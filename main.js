@@ -18,7 +18,7 @@ const likeToggle = document.createElement("div");
 const text3 = document.createElement("div");
 const continueButton = document.createElement("div");
 startButton.innerText = "Start";
-startButton.style.cssText = "border-radius:15px;color:white;text-align:center;font-size:xxx-large;border:solid;background-color:#0cc3ca;position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:80%;";
+
 startButton.id = "startButton";
 startButton.addEventListener("click",c => {
 　const valueBox = document.getElementById("problemAmountBox");
