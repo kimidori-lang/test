@@ -260,7 +260,7 @@ if (i < newProblems.length){
 　　});
 　　if (wordMeanings.length <= 0) word.innerText = nowProblem.meanings.join();
 　　else {
-　　　word.innerText = wordMeanings.join();
+　　　word.innerText = wordMeanings.join().replaceAll("[","").replaceAll("]","");
 　　　word.style.cssText = "font-size:large;";
 　　};
 　　word.style.cssText = `${word.style.cssText}text-align:center;position:absolute;top:30%;left:50%;width:95%;`;
