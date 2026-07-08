@@ -8,6 +8,8 @@ if (!localStorage.hasOwnProperty("answerCount")){
 if (!localStorage.hasOwnProperty("likes")){
 　localStorage.likes = "[]";
 };
+const screen = document.children[0]
+screen.style.cssText = `zoom:${(screen.clientHeight / 611)};`;
 const page = document.createElement("div");
 const startButton = document.createElement("div");
 const problemAmountBox = document.createElement("input");
