@@ -36,25 +36,30 @@ startButton.addEventListener("click",c => {
 　　const duplicate = document.createElement("div");
 　　const answerCount = document.createElement("div");
 　　const word = document.createElement("div");
+　　const comment = document.createElement("div");
 　　let meaningCount = 0;
 　　let readCount = 0;
 　　let wordCount = 0;
+　　let commentCount = 0;
 　　const missMeaning = [];
 　　const missRead = [];
 　　const wordList = [];
 　　const duplicateWords = [];
 　　const missWordBack = [];
+　　const missComment = [];
 　　duplicate.innerText = "not duplicate";
 　　for(let i = 0;i < problems.length;++i){
 　　　const e = problems[i];
-　　　if (e.word){
+　　　if (e.word && typeof e.word === "string"){
 　　　　wordList.push(e.word);
 　　　　++wordCount;
 　　　} else missWordBack.push(problems[i - 1]?.word);
 　　　if (Array.isArray(e.meanings)) ++meaningCount;
 　　　else missMeaning.push(e.word);
-　　　if (typeof e.read === "string") ++readCount;
+　　　if (e.read && typeof e.read === "string") ++readCount;
 　　　else missRead.push(e.word);
+　　　if (e.comment && typeof e.comment === "string") ++commentCount;
+　　　else missComment.push(e.word);
 　　};
 　　for (i in wordList){
 　　　const list = [...wordList];
@@ -72,6 +77,7 @@ startButton.addEventListener("click",c => {
 　　meaning.innerText = `mean:${meaningCount}/${problems.length}`;
 　　read.innerText = `read:${readCount}/${problems.length}`;
 　　word.innerText = `word:${wordCount}/${problems.length}`;
+　　comment.innerText = `comment:${commentCount}/${problems.length}`;
 　　answerCount.innerText = `count:${getStorage("answerCount")}`;
 　　debugButton.type = "text";
 　　debugButton.value = "";
@@ -85,12 +91,11 @@ startButton.addEventListener("click",c => {
 　　　　};
 　　　};
 　　　if (isInclude){
-　　　　t.style.cssText = `${t.style.cssText}background-color:lime;`;
-　　　　add(t)
+　　　　t.style.cssText = `${t.style.cssText}background-color:#4dc764;`;
 　　　} else {
-　　　　t.style.cssText = `${t.style.cssText}background-color:red;`;
-　　　　add(t);
+　　　　t.style.cssText = `${t.style.cssText}background-color:#d90429;`;
 　　　};
+　　　add(t);
 　　});
 　　if (missMeaning.length > 0){
 　　　console.log("MissMeaningWords:",missMeaning);
@@ -104,14 +109,20 @@ startButton.addEventListener("click",c => {
 　　　console.log("missWordsBack:",missWordBack);
 　　　word.style.cssText = "background-color:red;";
 　　};
+　　if (missComment.length > 0){
+　　　console.log("missComment:",missComment);
+　　　comment.style.cssText = "background-color:red;";
+　　};
 　　word.style.cssText = `${word.style.cssText}position:relative;x-index:10;font-weight:1000;-webkit-text-stroke:0.01px black;`;
 　　meaning.style.cssText = `${meaning.style.cssText}position:relative;x-index:10;font-weight:1000;-webkit-text-stroke:0.01px black;`;
 　　read.style.cssText = `${read.style.cssText}position:relative;x-index:10;font-weight:1000;-webkit-text-stroke:0.01px black;`;
 　　duplicate.style.cssText = `${duplicate.style.cssText}position:relative;x-index:10;font-weight:1000;-webkit-text-stroke:0.01px black;`;
 　　answerCount.style.cssText = `${answerCount.style.cssText}position:relative;x-index:10;font-weight:1000;-webkit-text-stroke:0.01px black;`;
+　　comment.style.cssText = `${comment.style.cssText}position:relative;x-index:10;font-weight:1000;-webkit-text-stroke:0.01px black;`;
 　　add(word);
 　　add(meaning);
 　　add(read);
+　　add(comment);
 　　add(debugButton);
 　　add(duplicate);
 　　add(answerCount);
@@ -229,7 +240,9 @@ add(startButton);
 add(problemAmountBox);
 add(text1);
 add(modeChangeButton);
-add(text2);function showProblem(obj){
+add(text2);
+
+function showProblem(obj){
 let i = obj.index;
 const newProblems = obj.newProblems;
 const failureProblems = obj.failureProblems;
@@ -302,7 +315,7 @@ if (i < newProblems.length){
 　　　button.innerText = "✖︎";
 　　　button.style.cssText = `${button.style.cssText}background-color:#d90429;`;
 　　　answeredTextBox.style.cssText = `${answeredTextBox.style.cssText}background-color:#d90429;`;
-　　　failureProblems.push(newProblems[i]);
+　　　failureProblems.push(nowProblem);
 　　　if (!storage.hasOwnProperty(nowProblem.word)) storage[nowProblem.word] = {correct:0,wrong:1};
 　　　else ++storage[nowProblem.word].wrong;
 　　};
@@ -310,11 +323,11 @@ if (i < newProblems.length){
 　　setStorage("answerCount",getStorage("answerCount") + 1);
 　　answeredTextBox.readOnly = true;
 　　button.style.cssText
-　　meanings.innerText = mode === "1" ? newProblems[i].meanings.join() : newProblems[i].word;
+　　meanings.innerText = mode === "1" ? nowProblem.meanings.join() : nowProblem.word;
 　　meanings.id = "meanings";
 　　meanings.style.cssText = "font-size:large;position:absolute;top:41%;left:5%;width:90%;";
 　　if (mode === "2") meanings.style.cssText = `${meanings.style.cssText}text-align:center;font-size:x-large;`;
-　　read.innerText = `${newProblems[i].read}`;
+　　read.innerText = `${nowProblem.read}`;
 　　read.style.cssText = "text-align:center;color:#b8bdbe;font-size:large;position:absolute;top:39%;left:50%;transform:translate(-50%,-50%);width:100%;";
 　　answeredIndexText.innerText = `${++i}/${newProblems.length}`;
 　　nextButton.innerText = "Next";
@@ -324,18 +337,18 @@ if (i < newProblems.length){
 　　nextButton.addEventListener("click",() => {
 　　　showProblem(newObj);
 　　},{once:true});
-　　if (getStorage("likes").includes(newProblems[i - 1].word)){
+　　if (getStorage("likes").includes(nowProblem.word)){
 　　　like.innerText = "★";
 　　　like.ariaLevel = "on";
 　　} else {
 　　　like.innerText = "☆";
 　　　like.ariaLevel = "off";
 　　};
-　　like.style.cssText = "align-content:center;border-radius:15px;font-size:xx-large;text-align:center;position:absolute;top:10%;left:90%;transform:translate(-50%,-50%);border:solid;color:white;background-color:#ff9b00;width:40px;height:40px;";
+　　like.style.cssText = "align-content:center;border-radius:15px;font-size:xx-large;text-align:center;position:absolute;top:5%;left:90%;transform:translate(-50%,-50%);border:solid;color:white;background-color:#ff9b00;width:40px;height:40px;";
 　　like.addEventListener("click",ev => {
 　　　const t = ev.target;
 　　　let likes = getStorage("likes");
-　　　const nowWord = newProblems[i - 1].word;
+　　　const nowWord = nowProblem.word;
 　　　if (t.ariaLevel === "off"){
 　　　　t.ariaLevel = "on";
 　　　　t.innerText = "★";
@@ -349,6 +362,66 @@ if (i < newProblems.length){
 　　　add(t);
 　　　setStorage("likes",likes);
 　　});
+　　if (nowProblem.comment){
+　　　const info = document.createElement("button");
+　　　const pop = document.createElement("div");
+　　　let timeout = 0;
+　　　pop.innerText = nowProblem.comment;
+　　　pop.popover = "auto";
+　　　pop.id = "pop";
+　　　pop.ariaLevel = "zoomOut";
+　　　pop.style.cssText = "font-size:large;background-color:#303030;color:#dadedf;width:90%;border-radius:15px;";
+　　　pop.addEventListener("toggle",ev => {
+　　　　const t = ev.target;
+　　　　if (ev.newState === "open") return;
+　　　　if (t.ariaLabel === "abs"){
+　　　　　t.ariaLabel = null;
+　　　　　return;
+　　　　} else if (t.ariaLabel === "showAbs"){
+　　　　　t.ariaLabel = null;
+　　　　　t.showPopover();
+　　　　　return;
+　　　　};
+　　　　if (t.ariaLevel === "zoomIn"){
+　　　　　const animation = t.getAnimations()[0];
+　　　　　let timeoutSet = 100;
+　　　　　t.showPopover();
+　　　　　if (animation){
+　　　　　　animation.reverse();
+　　　　　　timeoutSet = timeoutSet * animation.effect.getComputedTiming().progress;
+　　　　　} else t.animate([{offset:0,scale:1},{offset:1,scale:0}],100);
+　　　　　t.ariaLevel = "zoomOut";
+　　　　　timeout = window.setTimeout(() => {
+　　　　　　t.ariaLabel = "abs";
+　　　　　　t.hidePopover();
+　　　　　},timeoutSet);
+　　　　} else if (t.ariaLevel === "zoomOut"){
+　　　　　t.showPopover();
+　　　　　t.getAnimations()[0]?.reverse()
+　　　　　window.clearTimeout(timeout);
+　　　　　window.setTimeout(() => t.ariaLevel = "zoomIn",1);
+　　　　};
+　　　});
+　　　info.innerText = "i";
+　　　info.style.cssText = "position:absolute;font-size:xx-large;width:45px;height:45px;top:10%;left:90%;transform:translate(-50%,0px);background-color:#339afc;border-solid;border-radius:15px;color:white;border-color:white;";
+　　　info.popoverTargetAction = "toggle";
+　　　info.popoverTargetElement = pop;
+　　　info.addEventListener("click",ev => {
+　　　　const t = document.getElementById("pop");
+　　　　const animation = t.getAnimations()[0];
+　　　　if (t.ariaLevel === "zoomOut"){
+　　　　　window.clearTimeout(timeout);
+　　　　　if (animation){
+　　　　　　
+　　　　　} else {
+　　　　　　t.animate([{offset:0,scale:0},{offset:1,scale:1}],100);
+　　　　　};
+　　　　　window.setTimeout(() => t.ariaLevel = "zoomIn",1);
+  　　　};
+　　　});
+　　　add(info);
+　　　add(pop);
+　　};
 　　add(answeredTextBox);
 　　add(button);
 　　add(meanings);
@@ -459,5 +532,4 @@ document.getElementById("page").replaceChildren();
 function add(e){
 const page = document.getElementById("page");
 page.append(e);
-return document.body.append(page);
 };
